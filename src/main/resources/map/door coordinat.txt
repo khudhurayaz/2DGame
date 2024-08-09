@@ -1,0 +1,7 @@
+door
+spalte 15
+zeile 31
+
+key
+spalte 15
+zeile 30

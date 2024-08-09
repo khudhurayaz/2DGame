@@ -1,0 +1,2 @@
+Ubuntu Befehle:
+Konsole öffnen: STRG + ALT + T
