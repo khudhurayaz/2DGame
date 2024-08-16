@@ -21,6 +21,10 @@ public abstract class Entity {
     public boolean collisionOn = false;
     public static Logger entityLogger;
 
+    public Entity() {
+        this("UNKNOWN");
+    }
+
     public Entity(String name){
         this.name = name;
     }

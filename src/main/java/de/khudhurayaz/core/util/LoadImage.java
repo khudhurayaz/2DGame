@@ -1,5 +1,6 @@
-package de.khudhurayaz.core;
+package de.khudhurayaz.core.util;
 
+import de.khudhurayaz.core.GameConstant;
 import de.khudhurayaz.core.tile.ETiles;
 
 import javax.imageio.ImageIO;

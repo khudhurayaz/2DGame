@@ -5,10 +5,13 @@ import de.khudhurayaz.GamePanel;
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.awt.image.BufferStrategy;
 
 public class Window{
 
     private final JFrame frame;
+    //BufferStrategy
+    private BufferStrategy strategy;
 
     public Window(GamePanel panel){
         
@@ -32,7 +35,16 @@ public class Window{
                 panel.pause(false);
             }
         });
-
         panel.start();
+        makeStrategy();
+    }
+
+    private void makeStrategy(){
+        this.frame.createBufferStrategy(2);
+        this.strategy = this.frame.getBufferStrategy();
+    }
+
+    public BufferStrategy getStrategy(){
+        return this.strategy;
     }
 }

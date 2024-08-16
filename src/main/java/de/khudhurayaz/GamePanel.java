@@ -12,6 +12,7 @@ import de.khudhurayaz.core.sound.Sound;
 import de.khudhurayaz.core.tile.TileManager;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,10 +63,8 @@ public class GamePanel extends JPanel {
     public GamePanel(){
         init();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setDoubleBuffered(true);
         this.addKeyListener(kHandler);
         this.setFocusable(true);
-        this.setDoubleBuffered(true);
         setupGame();
     }
 
@@ -237,9 +236,14 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void repaintScreen(){
+        Graphics g = App.window.getStrategy().getDrawGraphics();
+        paintComponent(g);
+        g.dispose();
+        App.window.getStrategy().show();
+    }
 
+    public void paintComponent(Graphics g) {
         //Clear
         g.fillRect(0,0,getWidth(), getHeight());
 
@@ -260,8 +264,6 @@ public class GamePanel extends JPanel {
         }
 
         g.setColor(Color.white);
-
-        g.dispose();
     }
 
     public void playBackgroundSound(int i){

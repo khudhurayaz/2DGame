@@ -44,7 +44,7 @@ public class CollisionChecker {
         float tileNum1, tileNum2;
         switch (entity.direction){
             case "up":
-                entityTopRow = ((entityTopWorldY - entity.speed) - (entity.solidArea.height/2.5f)) / GameConstant.TILE_SIZE;
+                entityTopRow = ((entityTopWorldY - entity.speed) - entity.solidArea.width/2f) / GameConstant.TILE_SIZE;
                 tileNum1 = tileManager.mapTileNumber[(int)entityLeftCol][(int)entityTopRow];
                 tileNum2 = tileManager.mapTileNumber[(int)entityRightCol][(int)entityTopRow];
                 if(tileManager.tiles[(int)tileNum1].collision || tileManager.tiles[(int)tileNum2].collision){
@@ -52,7 +52,7 @@ public class CollisionChecker {
                 }
                 break;
             case "down":
-                entityBottomRow = ((entityBottomWorldY - entity.speed) + (entity.solidArea.height)) / GameConstant.TILE_SIZE;
+                entityBottomRow = ((entityBottomWorldY - entity.speed)  + entity.solidArea.height/2f) / GameConstant.TILE_SIZE;
                 tileNum1 = tileManager.mapTileNumber[(int)entityLeftCol][(int)entityBottomRow];
                 tileNum2 = tileManager.mapTileNumber[(int)entityRightCol][(int)entityBottomRow];
                 if(tileManager.tiles[(int)tileNum1].collision || tileManager.tiles[(int)tileNum2].collision){
@@ -60,7 +60,7 @@ public class CollisionChecker {
                 }
                 break;
             case "left":
-                entityLeftCol = ((entityLeftWorldX - entity.speed) - ((float)entity.solidArea.width/2)) / GameConstant.TILE_SIZE;
+                entityLeftCol = ((entityLeftWorldX - entity.speed / 2f) - entity.solidArea.width/2f) / GameConstant.TILE_SIZE;
                 tileNum1 = tileManager.mapTileNumber[(int)entityLeftCol][(int)entityTopRow];
                 tileNum2 = tileManager.mapTileNumber[(int)entityLeftCol][(int)entityBottomRow];
                 if(tileManager.tiles[(int)tileNum1].collision || tileManager.tiles[(int)tileNum2].collision){
@@ -68,7 +68,7 @@ public class CollisionChecker {
                 }
                 break;
             case "right":
-                entityRightCol = ((entityRightWorldX - entity.speed) + (entity.solidArea.width)) / GameConstant.TILE_SIZE;
+                entityRightCol = ((entityRightWorldX + entity.speed/2f) + entity.solidArea.width/2f) / GameConstant.TILE_SIZE;
                 tileNum1 = tileManager.mapTileNumber[(int)entityRightCol][(int)entityTopRow];
                 tileNum2 = tileManager.mapTileNumber[(int)entityRightCol][(int)entityBottomRow];
                 if(tileManager.tiles[(int)tileNum1].collision || tileManager.tiles[(int)tileNum2].collision){
@@ -100,7 +100,7 @@ public class CollisionChecker {
 
                 switch (e.direction){
                     case "up":
-                        e.solidArea.y -= (int) e.speed;
+                        e.solidArea.y -= e.speed;
                         if (e.solidArea.intersects(panel.objects[i].solidArea)){
                             if (panel.objects[i].collisionOn){
                                 e.collisionOn = true;
@@ -111,7 +111,7 @@ public class CollisionChecker {
                         }
                         break;
                     case "down":
-                        e.solidArea.y += (int) e.speed;
+                        e.solidArea.y += e.speed;
                         if (e.solidArea.intersects(panel.objects[i].solidArea)){
                             if (panel.objects[i].collisionOn){
                                 e.collisionOn = true;
@@ -122,7 +122,7 @@ public class CollisionChecker {
                         }
                         break;
                     case "left":
-                        e.solidArea.x -= (int) e.speed;
+                        e.solidArea.x -= e.speed;
                         if (e.solidArea.intersects(panel.objects[i].solidArea)){
                             if (panel.objects[i].collisionOn){
                                 e.collisionOn = true;
@@ -134,7 +134,7 @@ public class CollisionChecker {
                         }
                         break;
                     case "right":
-                        e.solidArea.x += (int) e.speed;
+                        e.solidArea.x += e.speed;
                         if (e.solidArea.intersects(panel.objects[i].solidArea)){
                             if (panel.objects[i].collisionOn){
                                 e.collisionOn = true;

@@ -3,13 +3,18 @@ package de.khudhurayaz.core;
 
 import de.khudhurayaz.App;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class GameLoop implements Runnable{
 
-    private final int FPS_SET = 64;
-    private final int UPS_SET = 200;
+    private static final int FPS_SET = 64;
+    private static final int UPS_SET = 200;
     private int fps, update;
     private boolean running;
     private Thread gameThread;
+    private boolean pause = false;
+    private static final Logger GL_LOGGER = Logger.getLogger(GameLoop.class.getSimpleName());
 
     public void start(){
         gameThread = new Thread(this);
@@ -22,24 +27,23 @@ public class GameLoop implements Runnable{
         running = false;
     }
 
-    private boolean firstPause = false;
     public void pause(boolean pause){
         if (!pause){
             running = false;
-            System.out.println("Das Spiel ist pausiert!");
+            GL_LOGGER.log(Level.INFO, "Spiel wird pausiert!");
             try {
                 stop();
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         }else{
-            if (firstPause){
-                System.out.println("Das Spiel wird fortgesetzt!");
+            if (this.pause){
+                GL_LOGGER.log(Level.INFO, "Spiel wird fortgesetzt!");
                 if (!gameThread.isAlive()){
                     start();
                 }
             }
-            firstPause = true;
+            this.pause = true;
         }
     }
 
@@ -69,16 +73,16 @@ public class GameLoop implements Runnable{
             }
 
             if (deltaF >= 1){
-                App.panel.repaint();
+                App.panel.repaintScreen();
                 frames++;
                 deltaF--;
             }
 
-            if (System.currentTimeMillis() - lastCheck >= 1000){
-                lastCheck = System.currentTimeMillis();
+            if (System.nanoTime() - lastCheck >= 1_000_000_000){
+                lastCheck = System.nanoTime();
                 fps = frames;
                 update = updates;
-                //System.out.println("FRAMES: " + frames + ", UPS: " + updates);
+                //GL_LOGGER.log(Level.INFO, "FRAMES: " + frames + ", UPS: " + updates);
                 frames = 0;
                 updates = 0;
             }

@@ -39,6 +39,7 @@ public class Sound {
             clip = AudioSystem.getClip();
             clip.open(ais);
             volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            volumeControl.setValue(-10);
         }catch (Exception e){
             SOUND_LOGGER.log(Level.WARNING, e.getMessage());
         }

@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     private boolean up, down, left, right;
-    private boolean isDebug;
+    private boolean isDebug = false;
     private boolean f1, f2, f3;
 
     public boolean UP(){

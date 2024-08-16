@@ -39,7 +39,7 @@ public enum ETiles {
     ;
 
     private final String image_path;
-    private int tile_num;
+    private final int tile_num;
     ETiles(String image_path, int tile_num){
         this.image_path = image_path + ".png";
         this.tile_num = tile_num;

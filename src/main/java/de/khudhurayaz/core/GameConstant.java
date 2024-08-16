@@ -10,8 +10,10 @@ public abstract class GameConstant {
     public static final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COLUMN;
     public static final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROW;
 
+    //Output
+    public static final String OUTPUT_PATH = "src/main/resources";
     //Image settings
-    private static final String IMAGE_PATH = "/images/";
+    public static final String IMAGE_PATH = "/images/";
     public static final String OBJECT_PATH = IMAGE_PATH + "Object/";
     public static final String PLAYER_IMGAE = IMAGE_PATH + "player/";
     public static final String TILES_IMAGE = IMAGE_PATH + "tiles/";

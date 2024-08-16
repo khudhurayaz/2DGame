@@ -4,13 +4,14 @@ import de.khudhurayaz.App;
 import de.khudhurayaz.GamePanel;
 import de.khudhurayaz.core.GameConstant;
 import de.khudhurayaz.core.Position;
+import de.khudhurayaz.core.animation.Animation;
+import de.khudhurayaz.core.animation.AnimationBuilder;
+import de.khudhurayaz.core.animation.AnimationComponent;
 import de.khudhurayaz.core.sound.Sound;
-import javax.imageio.ImageIO;
+import de.khudhurayaz.core.animation.SpriteSheet;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -22,16 +23,23 @@ import java.util.logging.Logger;
  */
 public class Player extends Entity{
 
-    public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     //Player Position
     public Position playerPosition;
     private int keys = 0;
     private int standCounter = 0;
     private boolean moving = false;
     private int pixelCounter = 0;
+    private Animation idleUp, idleDown, idleRight, idleLeft;
+    private AnimationComponent animationComponent;
 
     public Player(){
         super("Khudhur");
+        init();
+        setupAnimationComponent();
+        entityLogger = Logger.getLogger(getClass().getSimpleName());
+    }
+
+    private void init() {
         worldPosition = new Position(23*GameConstant.TILE_SIZE, 21*GameConstant.TILE_SIZE);
         speed = 2;
         direction = "down";
@@ -40,30 +48,24 @@ public class Player extends Entity{
                 (GameConstant.SCREEN_HEIGHT/2)-(GameConstant.TILE_SIZE/2),
                 (GameConstant.TILE_SIZE),
                 (GameConstant.TILE_SIZE));
-        solidArea = new Rectangle(10, 10, 36, 46);
+        int solidWidth = 30;
+        int solidHeight = 40;
+        solidArea = new Rectangle(solidWidth/2, solidHeight/2, solidWidth, solidHeight);
         solidAreaDefault = new Rectangle();
         solidAreaDefault.x = solidArea.x;
         solidAreaDefault.y = solidArea.y;
-        getPlayerImage();
-        entityLogger = Logger.getLogger(getClass().getSimpleName());
+
+        //Player Animation
+        idleLeft = AnimationBuilder.buildAnimation("player/walk/left");
+        idleRight = AnimationBuilder.buildAnimation("player/walk/right");
+        idleUp = AnimationBuilder.buildAnimation("player/walk/up");
+        idleDown = AnimationBuilder.buildAnimation("player/walk/down");
     }
 
-    /*
-        Load Player Image.
-     */
-    private void getPlayerImage(){
-        try{
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_up_1.png")));
-            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_up_2.png")));
-            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_down_1.png")));
-            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_down_2.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_left_1.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_left_2.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_right_1.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(GameConstant.PLAYER_IMGAE + "walk/boy_right_2.png")));
-        }catch (IOException e){
-            entityLogger.log(Level.WARNING, e.getMessage());
-        }
+    private void setupAnimationComponent(){
+        animationComponent = new AnimationComponent(this, idleUp, idleDown, idleRight, idleLeft);
+        animationComponent.setAnimationSpeed(30);
+        animationComponent.name = getName() + " Animation";
     }
 
     @Override
@@ -73,6 +75,7 @@ public class Player extends Entity{
                     App.panel.kHandler.DOWN() ||
                     App.panel.kHandler.LEFT() ||
                     App.panel.kHandler.RIGHT()) {
+
                 if (App.panel.kHandler.UP()) {
                     direction = "up";
                 }
@@ -95,13 +98,6 @@ public class Player extends Entity{
                 //object collision
                 pickUpObject(App.panel.collisionChecker.checkObject(this, true));
             }
-            else{
-                standCounter++;
-                if (standCounter == 20){
-                    spriteNum = 1;
-                    standCounter = 0;
-                }
-            }
         }
         if (moving){
             if (!collisionOn){
@@ -121,24 +117,20 @@ public class Player extends Entity{
                 }
             }
 
-            //Sprite Animation
-            spriteCounter++;
-            if (spriteCounter >= 30){
-                if (spriteNum == 1){
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 1;
-                }
-                spriteCounter = 0;
-            }
-
             pixelCounter += speed;
-
             if (pixelCounter == 48){
                 moving = false;
                 pixelCounter = 0;
             }
+        }else {
+            standCounter++;
+            if (standCounter == 30){
+                animationComponent.setAnimationIndex(0);
+                standCounter = 0;
+            }
         }
+
+        animationComponent.update();
     }
 
     /*
@@ -189,26 +181,16 @@ public class Player extends Entity{
     public void draw(Graphics2D g) {
         g.setColor(Color.WHITE);
         g.drawString(name, playerPosition.getX() + ((playerPosition.getWidth()/2)-(name.length()*4)), playerPosition.getY() - 10);
-        BufferedImage image = null;
-        switch (direction){
-            case "up":
-                if (spriteNum == 1) image = up1;
-                else if (spriteNum == 2) image = up2;
-                break;
-            case "down":
-                if (spriteNum == 1) image = down1;
-                else if (spriteNum == 2) image = down2;
-                break;
-            case "left":
-                if (spriteNum == 1) image = left1;
-                else if (spriteNum == 2) image = left2;
-                break;
-            case "right":
-                if (spriteNum == 1) image = right1;
-                else if (spriteNum == 2) image = right2;
-                break;
+        BufferedImage image = switch (direction) {
+            case "up" -> animationComponent.getAnimationUp(idleUp.getAnimationIndex());
+            case "down" -> animationComponent.getAnimationDown(idleDown.getAnimationIndex());
+            case "left" -> animationComponent.getAnimationLeft(idleLeft.getAnimationIndex());
+            case "right" -> animationComponent.getAnimationRight(idleRight.getAnimationIndex());
+            default -> null;
+        };
+        if (image != null) {
+            g.drawImage(image, playerPosition.getX(), playerPosition.getY(), GameConstant.TILE_SIZE, GameConstant.TILE_SIZE, null);
         }
-        g.drawImage(image, playerPosition.getX(), playerPosition.getY(), playerPosition.getWidth(), playerPosition.getHeight(), null);
     }
 
     public int getKeys(){

@@ -1,6 +1,6 @@
 package de.khudhurayaz.core.object;
 
-import de.khudhurayaz.core.LoadImage;
+import de.khudhurayaz.core.util.LoadImage;
 
 import java.io.IOException;
 import java.util.logging.Logger;

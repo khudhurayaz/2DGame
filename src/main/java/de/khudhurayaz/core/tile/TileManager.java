@@ -5,7 +5,7 @@ import de.khudhurayaz.GamePanel;
 import de.khudhurayaz.core.entity.Entity;
 import de.khudhurayaz.core.entity.Player;
 import de.khudhurayaz.core.GameConstant;
-import de.khudhurayaz.core.LoadImage;
+import de.khudhurayaz.core.util.LoadImage;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -38,22 +38,22 @@ public class TileManager extends Entity {
                 }
             }
             for (int i = 0; i <= ETiles.size(); i++) {
-                setCollision(i, "water", "wall", "tree");
+                setCollision(i, ETiles.WATER_00, ETiles.WALL, ETiles.TREE);
             }
         }catch (IOException e){
             System.err.println(e.getMessage());
         }
     }
 
-    private void setCollision(int i, String...param){
-        for (String s : param){
-            if (s.equalsIgnoreCase("water") && tiles[i].eTiles == ETiles.WATER_00){
+    private void setCollision(int i, ETiles...param){
+        for (ETiles s : param){
+            if (tiles[i].eTiles == ETiles.WATER_00){
                 for (int j = 0; j <= 13; j++) {
                     tiles[j].collision = true;
                 }
-            } else if (s.equalsIgnoreCase("wall") && tiles[i].eTiles == ETiles.WALL){
+            } else if (tiles[i].eTiles == ETiles.WALL){
                 tiles[i].collision = true;
-            } else if (s.equalsIgnoreCase("tree") && tiles[i].eTiles == ETiles.TREE) {
+            } else if (tiles[i].eTiles == ETiles.TREE) {
                 tiles[i].collision = true;
             }
         }
@@ -117,10 +117,10 @@ public class TileManager extends Entity {
             int screenY = worldY - player.worldPosition.getY() + player.playerPosition.getY();
 
             if (
-                worldX + GameConstant.TILE_SIZE > player.worldPosition.getX() - player.playerPosition.getX() &&
-                worldX - GameConstant.TILE_SIZE < player.worldPosition.getX() + player.playerPosition.getX() &&
-                worldY + GameConstant.TILE_SIZE > player.worldPosition.getY() - player.playerPosition.getY() &&
-                worldY - GameConstant.TILE_SIZE < player.worldPosition.getY() + player.playerPosition.getY()){
+                worldX + (GameConstant.TILE_SIZE*2) > player.worldPosition.getX() - player.playerPosition.getX() &&
+                worldX - (GameConstant.TILE_SIZE*2) < player.worldPosition.getX() + player.playerPosition.getX() &&
+                worldY + (GameConstant.TILE_SIZE*2) > player.worldPosition.getY() - player.playerPosition.getY() &&
+                worldY - (GameConstant.TILE_SIZE*2) < player.worldPosition.getY() + player.playerPosition.getY()){
                 g2d.drawImage(tiles[tileNum].tileImage, screenX, screenY, GameConstant.TILE_SIZE, GameConstant.TILE_SIZE, null);
             }
 
